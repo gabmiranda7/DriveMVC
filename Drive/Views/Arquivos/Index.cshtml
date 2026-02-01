@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ArquivoModel>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📁 Drive</h2>
+    </div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Index" class="row g-3
+align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        Filtrar por
+                        tipo
+                    </label>
+                    <select name="tipo" class="form-select"
+                            onchange="this.form.submit()">
+                        <option value="" selected="@(ViewBag.TipoFiltro == null)">Todos</option>
+                        <option value="pdf" selected="@(ViewBag.TipoFiltro == "pdf")">PDF</option>
+                        <option value="csv" selected="@(ViewBag.TipoFiltro == "csv")">CSV</option>
+                        <option value="xls" selected="@(ViewBag.TipoFiltro == "xls")">XLS</option>
+                        <option value="xlsx" selected="@(ViewBag.TipoFiltro == "xlsx")">XLSX</option>
+                        <option value="png" selected="@(ViewBag.TipoFiltro == "png")">PNG</option>
+                        <option value="jpg" selected="@(ViewBag.TipoFiltro == "jpg")">JPG</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Filtrar
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a href="/Arquivos/Index" class="btn btn-secondary w-100">
+                        Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+            <form asp-action="Upload" method="post"
+                  enctype="multipart/form-data" class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">
+                        Selecione um
+                        arquivo
+                    </label>
+                    <input type="file" name="arquivo" class="form-control"
+                           required />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Enviar Arquivo ⬆
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @Html.Partial("_GridArquivos", Model)
+        </div>
+    </div>
+</div>

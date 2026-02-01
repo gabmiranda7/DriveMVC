@@ -1,0 +1,88 @@
+﻿<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Preview</th>
+            <th>Nome</th>
+            <th>Extensão</th>
+            <th>Tamanho (KB)</th>
+            <th>Data</th>
+            <th class="text-end">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 70px;">
+                        @if (item.TipoMime.StartsWith("image/"))
+                        {
+                            <img src="data:@item.TipoMime;base64,@Convert.ToBase64String(item.ArquivoBytes)"
+                                 class="rounded border"
+                                 style="width: 60px; height: 40px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <!-- ÍCONES PARA OS TIPOS DE ARQUIVO -->
+                            string iconClass = "bi-file-earmark"; // padrão
+                            string iconColor = "#6c757d"; // cinza padrão
+                                string ext = item.Extensao.ToLower();
+                            if (ext == "pdf")
+                            {
+                                iconClass = "bi-file-earmark-pdf-fill";
+                                iconColor = "#e63946"; // vermelho PDF
+                            }
+                            else if (ext == "xls" || ext == "xlsx")
+                            {
+                                iconClass = "bi-file-earmark-excel-fill";
+                                iconColor = "#2a9d8f"; // verde Excel
+                            }
+                            else if (ext == "csv")
+                            {
+                                iconClass = "bi-file-earmark-text-fill";
+                                iconColor = "#457b9d"; // azul papel
+                            }
+
+                            <i class="bi @iconClass" style="font-size: 2.5rem; color:@iconColor"></i>
+                        }
+                    </td>
+
+                    <td>@item.NomeArquivo</td>
+                    <td>
+                        <span class="badge bg-secondary">@item.Extensao.ToUpper()</span>
+                    </td>
+                    <td>@(item.Tamanho / 1024)</td>
+                    <td>@item.DataUpload.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="text-end">
+                        <a href="/Arquivos/Download/@item.Id" class="btn btn-sm btn-success me-1">
+                            Download ⬇
+                        </a>
+                        <button class="btn btn-sm btn-danger"
+                                onclick="excluir(@item.Id)">
+                            Excluir 🗑
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    Nenhum arquivo encontrado.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function excluir(id) {
+    if (!confirm("Confirmar exclusão?")) return;
+    $.post("/Arquivos/Delete", { id: id }, function (res) {
+    if (res.success) {
+    location.reload();
+    }
+    });
+    }
+</script>
